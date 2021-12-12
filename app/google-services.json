@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "634175966764",
+    "project_id": "milia-b06fb",
+    "storage_bucket": "milia-b06fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634175966764:android:df10f71f0914b65d714b89",
+        "android_client_info": {
+          "package_name": "com.dmtfc.milia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634175966764-e9ti3tteh664b1uft51b1rb830f81s5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs5nmF-ypXpUTY6Tz4TTnU_-nVKg4c1ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634175966764-e9ti3tteh664b1uft51b1rb830f81s5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
