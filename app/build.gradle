@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id("maven-publish")
 }
 
 android {
@@ -40,4 +41,22 @@ dependencies {
     implementation "com.github.parse-community.Parse-SDK-Android:parse:1.26.0"
     releaseImplementation 'androidx.core:core:1.6.0'
 
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Zewodec/Milia")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("Zewodec")
+                password = project.findProperty("gpr.key") ?: System.getenv("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")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
