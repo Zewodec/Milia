@@ -2,11 +2,15 @@ package com.dmtfc.milia;
 
 import android.app.Application;
 
+import com.onesignal.OneSignal;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
 
 public class App extends Application {
+
+    private static final String ONESIGNAL_APP_ID = "6d9bdc89-8c8d-43cb-983c-4b375aa7099a";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,5 +29,11 @@ public class App extends Application {
         defaultACL.setPublicReadAccess(true);
         defaultACL.setPublicWriteAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
+
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
     }
 }
