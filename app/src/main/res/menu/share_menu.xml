@@ -6,6 +6,9 @@
         android:icon="@android:drawable/ic_menu_share"
         android:title="Поширити" />
     <item
+        android:id="@+id/MyProfile"
+        android:title="Мій Профіль"/>
+    <item
         android:id="@+id/LogOut"
         android:title="Вихід" />
 

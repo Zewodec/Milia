@@ -60,6 +60,9 @@ public class UserListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        } else if (item.getItemId() == R.id.MyProfile) {
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -135,7 +138,7 @@ public class UserListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_list);
 
         if (ParseUser.getCurrentUser() == null) {
-            Intent intent = new Intent(this,MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
             return;
@@ -143,8 +146,8 @@ public class UserListActivity extends AppCompatActivity {
 
         setTitle("MILIA - Користувачі");
 
-        ListView userListView = (ListView) findViewById(R.id.userListView);
-        ArrayList<String> usernames = new ArrayList<String>();
+        ListView userListView = findViewById(R.id.userListView);
+        ArrayList<String> usernames = new ArrayList<>();
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, usernames);
 
