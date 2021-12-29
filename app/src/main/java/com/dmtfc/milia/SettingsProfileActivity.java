@@ -58,39 +58,19 @@ public class SettingsProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfileImage() {
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("User");
-        String username = ParseUser.getCurrentUser().getUsername();
+        ParseFile file = (ParseFile) ParseUser.getCurrentUser().get("ava");
+        if (file != null) {
+            file.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    ImageView profileImageSettings = findViewById(R.id.profileImageSettings);
 
-        query.whereEqualTo("username", username);
+                    profileImageSettings.setImageBitmap(bitmap);
 
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null && objects.size() > 0) {
-                    for (ParseObject object : objects) {
-                        ParseFile file = (ParseFile) object.get("ava");
-
-                        file.getDataInBackground(new GetDataCallback() {
-                            @Override
-                            public void done(byte[] data, ParseException e) {
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                Toast.makeText(getApplicationContext(), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT).show();
-                                ImageView profileImageSettings = findViewById(R.id.profileImageSettings);
-
-                                profileImageSettings.setLayoutParams(new ViewGroup.LayoutParams(300,300));
-
-                                profileImageSettings.setImageBitmap(bitmap);
-
-                            }
-                        });
-                    }
-                } else if (e != null) {
-                    Toast.makeText(getApplicationContext(), "Не вдалося загрузити аватарку", Toast.LENGTH_SHORT).show();
-                    Log.e("Load User Ava", "Error =( :" + e.getMessage());
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
 
     }
 
