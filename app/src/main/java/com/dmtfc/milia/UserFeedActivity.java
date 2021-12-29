@@ -45,7 +45,7 @@ public class UserFeedActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                Toast.makeText(getApplicationContext(), "Size:" + objects.size(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Size:" + objects.size(), Toast.LENGTH_SHORT).show();
                 if (e == null && objects.size() > 0) {
                     for (ParseObject object : objects) {
                         ParseFile file = (ParseFile) object.get("image");

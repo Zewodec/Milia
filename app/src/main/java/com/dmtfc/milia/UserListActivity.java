@@ -48,7 +48,7 @@ public class UserListActivity extends AppCompatActivity {
 
         MenuInflater menuInflater = getMenuInflater();
 
-        menuInflater.inflate(R.menu.share_menu, menu);
+        menuInflater.inflate(R.menu.user_list_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
