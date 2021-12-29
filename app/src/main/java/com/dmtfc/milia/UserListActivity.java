@@ -38,6 +38,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The list of users Activity
+ */
 public class UserListActivity extends AppCompatActivity {
 
     @Override

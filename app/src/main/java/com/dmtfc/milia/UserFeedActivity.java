@@ -20,6 +20,9 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
+/**
+ * The Content of User's photo Activity
+ */
 public class UserFeedActivity extends AppCompatActivity {
 
     @Override

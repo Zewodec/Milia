@@ -20,6 +20,9 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+/**
+ * My Profile Activity for authorized user
+ */
 public class UserProfileActivity extends AppCompatActivity {
 
     @Override
@@ -51,12 +54,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                     ImageView imageView = new ImageView(getApplicationContext());
 
-//                                    imageView.setLayoutParams(new ViewGroup.LayoutParams(
-//                                            ViewGroup.LayoutParams.MATCH_PARENT,
-//                                            ViewGroup.LayoutParams.WRAP_CONTENT
-//                                    ));
-
-                                    imageView.setLayoutParams(new ViewGroup.LayoutParams(photoGridLayout.getWidth() /3,400));
+                                    imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                                            photoGridLayout.getWidth() /3,
+                                            400));
                                     imageView.setScaleType(ImageView.ScaleType.CENTER);
 
                                     imageView.setImageBitmap(bitmap);

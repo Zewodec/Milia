@@ -15,6 +15,9 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/**
+ * Login Activity =)
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
