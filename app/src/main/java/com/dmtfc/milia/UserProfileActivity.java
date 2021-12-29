@@ -36,6 +36,8 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        loadUserProfileImage();
+
         String username = ParseUser.getCurrentUser().getUsername();
 
         ParseQuery<ParseObject> query = new ParseQuery<>("Image");
@@ -75,6 +77,22 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void loadUserProfileImage() {
+        ParseFile file = (ParseFile) ParseUser.getCurrentUser().get("ava");
+        if (file != null) {
+            file.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    ImageView AvaImage = findViewById(R.id.AvaImage);
+
+                    AvaImage.setImageBitmap(bitmap);
+
+                }
+            });
+        }
     }
 
     @Override

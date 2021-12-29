@@ -1,11 +1,5 @@
 package com.dmtfc.milia;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,22 +12,23 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 public class SettingsProfileActivity extends AppCompatActivity {
 
@@ -71,7 +66,6 @@ public class SettingsProfileActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     private void CheckExternalStoragePermission() {
@@ -86,7 +80,6 @@ public class SettingsProfileActivity extends AppCompatActivity {
         CheckExternalStoragePermission();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         photoSettingsResultLauncher.launch(intent);
-
     }
 
     ActivityResultLauncher<Intent> photoSettingsResultLauncher = registerForActivityResult(
