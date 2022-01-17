@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +23,6 @@ import java.util.List;
  * The Content of User's photo Activity
  */
 public class UserFeedActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +44,7 @@ public class UserFeedActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
 //                Toast.makeText(getApplicationContext(), "Size:" + objects.size(), Toast.LENGTH_SHORT).show();
+
                 if (e == null && objects.size() > 0) {
                     for (ParseObject object : objects) {
                         ParseFile file = (ParseFile) object.get("image");
@@ -75,6 +74,7 @@ public class UserFeedActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
                     }
                 }
             }

@@ -28,6 +28,9 @@ import java.util.List;
 
 /**
  * My Profile Activity for authorized user
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
  */
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -108,11 +111,12 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == R.id.settingsProfileMenu){
-            Intent intent = new Intent(this, SettingsProfileActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()){
+            case R.id.settingsProfileMenu:
+                Intent intent = new Intent(this, SettingsProfileActivity.class);
+                startActivity(intent);
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

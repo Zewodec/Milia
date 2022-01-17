@@ -14,6 +14,12 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+/**
+ * Sing Up Activity
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class SingUpActivity extends AppCompatActivity {
 
     @Override

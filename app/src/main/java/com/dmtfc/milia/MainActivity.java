@@ -17,6 +17,9 @@ import com.parse.ParseUser;
 
 /**
  * Login Activity =)
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -36,9 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Check if logged
         if (ParseUser.getCurrentUser() != null) {
-            if (ParseUser.getCurrentUser().isAuthenticated()) {
-                AlreadyUserLoggedGoNext();
-            }
+            AlreadyUserLoggedGoNext();
+//            if (ParseUser.getCurrentUser().isAuthenticated()) {}
         }
 
         if (editTextLogin.getText().toString() == "" || editTextPassword.getText().toString() == "") {
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseUser parseUser, ParseException e) {
                                     if (parseUser != null) {
-                                        Toast.makeText(getApplicationContext(), "Авторизація успішна! GO GO GO!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Авторизація успішна!", Toast.LENGTH_SHORT).show();
                                         Log.i("Auth", "Sign In: OK!");
 
                                         SwitchActivityToUserList();
@@ -190,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
     //Change to Sign Up Activity
     //TO DO: Nice transition between them
     private void ChangeScene() {
-        /*Scene registerScene;
+        /*
+        Scene registerScene;
 
         ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.mainActivityScene);
 
