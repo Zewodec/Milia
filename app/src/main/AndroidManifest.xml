@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidParseSdkJava">
         <activity
+            android:name=".PhotoShowActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingsProfileActivity"
             android:exported="false" />
         <activity

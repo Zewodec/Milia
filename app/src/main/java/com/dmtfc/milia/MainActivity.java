@@ -169,7 +169,8 @@ public class MainActivity extends AppCompatActivity {
           }
         }
       }
-    });*/
+    });
+    */
 
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }

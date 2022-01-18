@@ -7,14 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.gridlayout.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
 
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
@@ -66,11 +65,20 @@ public class UserProfileActivity extends AppCompatActivity {
                                     ImageView imageView = new ImageView(getApplicationContext());
 
                                     imageView.setLayoutParams(new ViewGroup.LayoutParams(
-                                            photoGridLayout.getWidth() /3,
+                                            photoGridLayout.getWidth() / 3,
                                             400));
                                     imageView.setScaleType(ImageView.ScaleType.CENTER);
 
                                     imageView.setImageBitmap(bitmap);
+
+                                    imageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(getApplicationContext(), PhotoShowActivity.class);
+                                            intent.putExtra("Image", data);
+                                            startActivity(intent);
+                                        }
+                                    });
 
                                     photoGridLayout.addView(imageView);
                                 }
@@ -111,7 +119,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settingsProfileMenu:
                 Intent intent = new Intent(this, SettingsProfileActivity.class);
                 startActivity(intent);
