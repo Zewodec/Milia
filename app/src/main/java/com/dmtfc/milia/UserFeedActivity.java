@@ -3,9 +3,11 @@ package com.dmtfc.milia;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,8 @@ import java.util.List;
  */
 public class UserFeedActivity extends AppCompatActivity {
 
+    private boolean isFollowing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,23 @@ public class UserFeedActivity extends AppCompatActivity {
 
         LinearLayout photoLayoutList = (LinearLayout) findViewById(R.id.photoLayoutList);
 
+        Button FollowingButton = findViewById(R.id.FollowingButton);
+
+        isFollowing = ParseUser.getCurrentUser().getList("isFollowing").contains(username);
+
+        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+
+        FollowingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isFollowing) {
+                    UnFollowFromUser(FollowingButton, username);
+                } else {
+                    FollowUser(FollowingButton, username);
+                }
+            }
+        });
+
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Image");
 
         query.whereEqualTo("username", username);
@@ -50,7 +71,7 @@ public class UserFeedActivity extends AppCompatActivity {
                 if (e == null && objects.size() > 0) {
 
                     TextView postCountTextView = findViewById(R.id.PostCountTextView);
-                    postCountTextView.setText(objects.size()+"");
+                    postCountTextView.setText(objects.size() + "");
 
                     for (ParseObject object : objects) {
                         ParseFile file = (ParseFile) object.get("image");
@@ -91,8 +112,37 @@ public class UserFeedActivity extends AppCompatActivity {
 
     }
 
+    private void CheckIsFollowingAndSetButtonStyle(Button FollowingButton, String username) {
+        isFollowing = ParseUser.getCurrentUser().getList("isFollowing").contains(username);
+        if (isFollowing) {
+            FollowingButton.setText("Відстужується");
+            FollowingButton.setBackgroundColor(Color.GRAY);
+        } else {
+            FollowingButton.setText("Стежити");
+            FollowingButton.setBackgroundColor(Color.parseColor("#FF6200EE"));
+        }
+    }
+
+    private void UnFollowFromUser(Button FollowingButton, String username) {
+        ParseUser.getCurrentUser().getList("isFollowing").remove(username);
+        List tempIsFollowing = ParseUser.getCurrentUser().getList("isFollowing");
+        ParseUser.getCurrentUser().remove("isFollowing");
+        ParseUser.getCurrentUser().put("isFollowing", tempIsFollowing);
+        ParseUser.getCurrentUser().saveInBackground();
+
+        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+    }
+
+    private void FollowUser(Button FollowingButton, String username) {
+        ParseUser.getCurrentUser().add("isFollowing", username);
+        ParseUser.getCurrentUser().saveInBackground();
+
+        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+    }
+
     /**
      * Set Users info/parameters as Followers, Whom Following and amount of images
+     *
      * @param username Username of person who opened
      */
     private void SetUserFeedInfo(String username) {
@@ -111,10 +161,11 @@ public class UserFeedActivity extends AppCompatActivity {
                     List haveFollowers = foundUser.getList("haveFollowers");
                     List isFollowing = foundUser.getList("isFollowing");
 
-                    haveFollowersCountTextView.setText(haveFollowers.size()+"");
-                    isFollowingCountTextView.setText(isFollowing.size()+"");
+                    haveFollowersCountTextView.setText(haveFollowers.size() + "");
+                    isFollowingCountTextView.setText(isFollowing.size() + "");
                 }
             }
         });
     }
+
 }
