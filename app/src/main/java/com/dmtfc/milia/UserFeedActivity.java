@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ import java.util.List;
  * The Content of User's photo Activity
  */
 public class UserFeedActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +47,11 @@ public class UserFeedActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-//                Toast.makeText(getApplicationContext(), "Size:" + objects.size(), Toast.LENGTH_SHORT).show();
-
                 if (e == null && objects.size() > 0) {
+
+                    TextView postCountTextView = findViewById(R.id.PostCountTextView);
+                    postCountTextView.setText(objects.size()+"");
+
                     for (ParseObject object : objects) {
                         ParseFile file = (ParseFile) object.get("image");
 
@@ -68,7 +74,7 @@ public class UserFeedActivity extends AppCompatActivity {
 //                                    ));
 
                                     imageView.setImageBitmap(bitmap);
-                                    imageView.setPadding(0,0,0,20);
+                                    imageView.setPadding(0, 0, 0, 20);
 
                                     photoLayoutList.addView(imageView);
                                 }
@@ -76,6 +82,37 @@ public class UserFeedActivity extends AppCompatActivity {
                         });
 
                     }
+
+                    SetUserFeedInfo(username);
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * Set Users info/parameters as Followers, Whom Following and amount of images
+     * @param username Username of person who opened
+     */
+    private void SetUserFeedInfo(String username) {
+        ParseQuery<ParseUser> usersQuery = ParseUser.getQuery();
+
+        usersQuery.whereEqualTo("username", username);
+
+        usersQuery.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null && objects.size() > 0) {
+                    TextView haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
+                    TextView isFollowingCountTextView = findViewById(R.id.isFollowingCountTextView);
+
+                    ParseUser foundUser = objects.get(0);
+                    List haveFollowers = foundUser.getList("haveFollowers");
+                    List isFollowing = foundUser.getList("isFollowing");
+
+                    haveFollowersCountTextView.setText(haveFollowers.size()+"");
+                    isFollowingCountTextView.setText(isFollowing.size()+"");
                 }
             }
         });

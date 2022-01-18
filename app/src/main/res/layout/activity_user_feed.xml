@@ -6,13 +6,123 @@
     android:layout_height="match_parent"
     tools:context=".UserFeedActivity">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/AvaImage"
+                    android:layout_width="75dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginBottom="60dp"
+                    android:contentDescription="Ваш Аватар"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.507"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="281dp"
+                    android:layout_height="120dp"
+                    app:alignmentMode="alignMargins"
+                    app:columnCount="3"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/AvaImage"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rowCount="3">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="93dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Постів:"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_column="0"
+                            app:layout_row="0" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="93dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Читачів:"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_column="1"
+                            app:layout_row="0" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Підписки:"
+                            android:textSize="16sp"
+                            app:layout_column="2"
+                            app:layout_row="0"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/PostCountTextView"
+                            android:layout_width="93dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textSize="14sp"
+                            app:layout_column="0"
+                            app:layout_row="1" />
+
+                        <TextView
+                            android:id="@+id/haveFollowersCountTextView"
+                            android:layout_width="93dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:text="0"
+                            app:layout_column="1"
+                            app:layout_row="1" />
+
+                        <TextView
+                            android:id="@+id/isFollowingCountTextView"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:text="0"
+                            app:layout_column="2"
+                            app:layout_row="1" />
+
+                        <Button
+                            android:id="@+id/FollowingButton"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:text="Стежити"
+                            app:layout_column="0"
+                            app:layout_columnSpan="3"
+                            app:layout_gravity="bottom|center"
+                            app:layout_row="2" />
+
+                </androidx.gridlayout.widget.GridLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ScrollView
             android:layout_width="409dp"
-            android:layout_height="729dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
             tools:ignore="SpeakableTextPresentCheck">
 
                 <LinearLayout

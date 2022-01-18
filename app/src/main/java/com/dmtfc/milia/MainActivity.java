@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         moveToRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChangeScene();
+                ChangeSceneToSignUp();
             }
         });
 
@@ -185,14 +185,14 @@ public class MainActivity extends AppCompatActivity {
     //If User is already logged than go to UserList Activity
     private void AlreadyUserLoggedGoNext() {
         Intent intent = new Intent(MainActivity.this, UserListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // delete all other activity and
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // delete all other activity and
         startActivity(intent);
         finish();
     }
 
     //Change to Sign Up Activity
     //TO DO: Nice transition between them
-    private void ChangeScene() {
+    private void ChangeSceneToSignUp() {
         /*
         Scene registerScene;
 
