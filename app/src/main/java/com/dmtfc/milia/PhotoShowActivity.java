@@ -31,6 +31,14 @@ public class PhotoShowActivity extends AppCompatActivity {
 
         photoShow.setImageBitmap(bitmap);
         fullscreen();
+
+        photoShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fullscreen();
+                finish();
+            }
+        });
     }
 
     @Override

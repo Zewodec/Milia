@@ -89,11 +89,6 @@ public class UserFeedActivity extends AppCompatActivity {
                                             ViewGroup.LayoutParams.WRAP_CONTENT
                                     ));
 
-//                                    imageView.setLayoutParams(new ViewGroup.LayoutParams(
-//                                            300,
-//                                            300
-//                                    ));
-
                                     imageView.setImageBitmap(bitmap);
                                     imageView.setPadding(0, 0, 0, 20);
 
@@ -101,9 +96,7 @@ public class UserFeedActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
                     }
-
                     SetUserFeedInfo(username);
                 }
             }
