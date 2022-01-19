@@ -2,6 +2,7 @@ package com.dmtfc.milia;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,10 +24,13 @@ import com.parse.ParseUser;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressDialog = new ProgressDialog(getApplicationContext());
 
         setTitle("MILIA - Авторизація");
 
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
             AuthButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    progressDialog.show();
                     //Auth in parse system
                     ParseUser.logInInBackground(
                             editTextLogin.getText().toString(),
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                             new LogInCallback() {
                                 @Override
                                 public void done(ParseUser parseUser, ParseException e) {
+                                    progressDialog.dismiss();
                                     if (parseUser != null) {
                                         Toast.makeText(getApplicationContext(), "Авторизація успішна!", Toast.LENGTH_SHORT).show();
                                         Log.i("Auth", "Sign In: OK!");
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ParseUser.logOut();
+        // ParseUser.logOut();
 
     /*
     if (ParseUser.getCurrentUser() != null){

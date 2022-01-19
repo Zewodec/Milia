@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -43,102 +44,13 @@ import java.util.List;
  */
 public class UserListActivity extends AppCompatActivity {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater menuInflater = getMenuInflater();
-
-        menuInflater.inflate(R.menu.user_list_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.share) {
-            CheckExternalStoragePermission();
-        } else if (item.getItemId() == R.id.LogOut) {
-            ParseUser.logOut();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } else if (item.getItemId() == R.id.MyProfile) {
-            Intent intent = new Intent(this, UserProfileActivity.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void CheckExternalStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                getPhotoToShare();
-            }
-        }
-    }
-
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
-    ActivityResultLauncher<Intent> photoActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // There are no request codes
-                        Intent data = result.getData();
-
-                        //do some operation
-                        if (data != null) {
-
-                            Uri selectedImage = data.getData();
-                            try {
-                                Log.i("Image", "Image Selected!");
-
-                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
-                                byte[] byteArray = stream.toByteArray();
-                                ParseFile file = new ParseFile("image.png", byteArray);
-                                ParseObject object = new ParseObject("Image");
-                                object.put("image", file);
-                                object.put("username", ParseUser.getCurrentUser().getUsername());
-                                object.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null) {
-                                            Toast.makeText(UserListActivity.this, "Зображення було додане!", Toast.LENGTH_SHORT).show();
-                                            Log.i("Add Photo", "Success photo added");
-                                        } else {
-                                            Toast.makeText(UserListActivity.this, "Помилка: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                            Log.e("Add Photo", "Error with add photo");
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            } catch (Exception e) {
-                                Log.e("Image", "ERROR:" + e.getMessage());
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                }
-            });
-
-
-    private void getPhotoToShare() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        photoActivityResultLauncher.launch(intent);
-    }
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
+        progressDialog = new ProgressDialog(getApplicationContext());
 
         if (ParseUser.getCurrentUser() == null) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -183,7 +95,105 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+
+        menuInflater.inflate(R.menu.user_list_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.share:
+                CheckExternalStoragePermission();
+                break;
+            case R.id.LogOut: {
+                ParseUser.logOut();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            }
+            case R.id.MyProfile: {
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                startActivity(intent);
+                break;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void CheckExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            } else {
+                getPhotoToShare();
+            }
+        }
+    }
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    ActivityResultLauncher<Intent> photoActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+
+                        //do some operation
+                        if (data != null) {
+
+                            Uri selectedImage = data.getData();
+                            try {
+                                Log.i("Image", "Image Selected!");
+
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
+                                byte[] byteArray = stream.toByteArray();
+                                ParseFile file = new ParseFile("image.png", byteArray);
+                                ParseObject object = new ParseObject("Image");
+                                object.put("image", file);
+                                object.put("username", ParseUser.getCurrentUser().getUsername());
+                                progressDialog.show();
+                                object.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        progressDialog.dismiss();
+                                        if (e == null) {
+                                            Toast.makeText(UserListActivity.this, "Зображення було додане!", Toast.LENGTH_SHORT).show();
+                                            Log.i("Add Photo", "Success photo added");
+                                        } else {
+                                            Toast.makeText(UserListActivity.this, "Помилка: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                            Log.e("Add Photo", "Error with add photo");
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.e("Image", "ERROR:" + e.getMessage());
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                }
+            });
 
 
+    private void getPhotoToShare() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        photoActivityResultLauncher.launch(intent);
     }
 }
