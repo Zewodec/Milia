@@ -42,22 +42,24 @@
 
                         <TextView
                             android:id="@+id/textView2"
-                            android:layout_width="93dp"
+                            android:layout_width="92dp"
                             android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:text="Постів:"
-                            android:textSize="16sp"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_column="0"
                             app:layout_row="0" />
 
                         <TextView
                             android:id="@+id/textView3"
-                            android:layout_width="93dp"
+                            android:layout_width="92dp"
                             android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:text="Читачів:"
-                            android:textSize="16sp"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_column="1"
                             app:layout_row="0" />
@@ -66,12 +68,13 @@
                             android:id="@+id/textView4"
                             android:layout_width="95dp"
                             android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:text="Підписки:"
-                            android:textSize="16sp"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
                             app:layout_column="2"
-                            app:layout_row="0"
-                            android:textStyle="bold" />
+                            app:layout_row="0" />
 
                         <TextView
                             android:id="@+id/PostCountTextView"
@@ -80,7 +83,7 @@
                             android:layout_marginTop="15dp"
                             android:gravity="center"
                             android:text="0"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
                             app:layout_column="0"
                             app:layout_row="1" />
 
@@ -91,6 +94,7 @@
                             android:layout_marginTop="15dp"
                             android:gravity="center"
                             android:text="0"
+                            android:textSize="16sp"
                             app:layout_column="1"
                             app:layout_row="1" />
 
@@ -101,14 +105,16 @@
                             android:layout_marginTop="15dp"
                             android:gravity="center"
                             android:text="0"
+                            android:textSize="16sp"
                             app:layout_column="2"
                             app:layout_row="1" />
 
                         <Button
                             android:id="@+id/FollowingButton"
-                            android:layout_width="150dp"
+                            android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:text="Стежити"
+                            android:textSize="14sp"
                             app:layout_column="0"
                             app:layout_columnSpan="3"
                             app:layout_gravity="bottom|center"

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -88,6 +89,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button openSettingsButton = findViewById(R.id.OpenSettingsButton);
     }
 
     private void loadUserProfileImage() {
@@ -119,11 +122,9 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.settingsProfileMenu:
-                Intent intent = new Intent(this, SettingsProfileActivity.class);
-                startActivity(intent);
-                break;
+        if (item.getItemId() == R.id.settingsProfileMenu) {
+            Intent intent = new Intent(this, SettingsProfileActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

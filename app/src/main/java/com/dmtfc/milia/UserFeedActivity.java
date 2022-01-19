@@ -154,7 +154,7 @@ public class UserFeedActivity extends AppCompatActivity {
         ParseUser.getCurrentUser().remove("isFollowing");
         ParseUser.getCurrentUser().put("isFollowing", tempIsFollowing);
         ParseUser.getCurrentUser().saveInBackground();
-
+/*
         ParseQuery<ParseUser> haveUnFollowerQuery = ParseQuery.getQuery("User");
         haveUnFollowerQuery.whereEqualTo("username", username);
         haveUnFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -181,7 +181,7 @@ public class UserFeedActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        });*/
 
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
     }
@@ -189,7 +189,7 @@ public class UserFeedActivity extends AppCompatActivity {
     private void FollowUser(Button FollowingButton, String username) {
         ParseUser.getCurrentUser().add("isFollowing", username);
         ParseUser.getCurrentUser().saveInBackground();
-
+/*
         ParseQuery<ParseUser> haveFollowerQuery = ParseQuery.getQuery("_User");
         haveFollowerQuery.whereEqualTo("username", username);
         haveFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -213,7 +213,7 @@ public class UserFeedActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        });*/
 
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
     }
