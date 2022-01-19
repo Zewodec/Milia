@@ -35,13 +35,11 @@ import java.util.List;
  */
 public class UserProfileActivity extends AppCompatActivity {
 
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        progressDialog = new ProgressDialog(getApplicationContext());
 
         loadUserProfileImage();
 
@@ -54,7 +52,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         GridLayout photoGridLayout = findViewById(R.id.PhotoGridLayout);
 
-        progressDialog.show();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -92,7 +89,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         });
                     }
                 }
-                progressDialog.dismiss();
             }
         });
 

@@ -23,13 +23,10 @@ import com.parse.SignUpCallback;
  */
 public class SingUpActivity extends AppCompatActivity {
 
-    private ProgressDialog progressDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_up);
-        progressDialog = new ProgressDialog(getApplicationContext());
 
         setTitle("MILIA - Реєстрація");
 
@@ -55,12 +52,10 @@ public class SingUpActivity extends AppCompatActivity {
                     user.setUsername(loginText.getText().toString());
                     user.setPassword(passwordText.getText().toString());
 
-                    progressDialog.show();
                     //Registration on server
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {
-                            progressDialog.dismiss();
                             if (e == null) {
                                 Toast.makeText(getApplicationContext(), "Ви успішно зареєструвались " + loginText.getText().toString(), Toast.LENGTH_SHORT).show();
                                 Log.i("SingUp", "Success registration of " + loginText.getText().toString());

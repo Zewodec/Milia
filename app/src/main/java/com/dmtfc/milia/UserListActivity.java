@@ -44,13 +44,10 @@ import java.util.List;
  */
 public class UserListActivity extends AppCompatActivity {
 
-    private ProgressDialog progressDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
-        progressDialog = new ProgressDialog(getApplicationContext());
 
         if (ParseUser.getCurrentUser() == null) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -166,11 +163,9 @@ public class UserListActivity extends AppCompatActivity {
                                 ParseObject object = new ParseObject("Image");
                                 object.put("image", file);
                                 object.put("username", ParseUser.getCurrentUser().getUsername());
-                                progressDialog.show();
                                 object.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        progressDialog.dismiss();
                                         if (e == null) {
                                             Toast.makeText(UserListActivity.this, "Зображення було додане!", Toast.LENGTH_SHORT).show();
                                             Log.i("Add Photo", "Success photo added");

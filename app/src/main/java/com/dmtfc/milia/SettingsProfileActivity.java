@@ -105,12 +105,9 @@ public class SettingsProfileActivity extends AppCompatActivity {
                                 ParseFile file = new ParseFile(ParseUser.getCurrentUser().getUsername() + "-ava.png", byteArray);
                                 ParseUser currentUser = ParseUser.getCurrentUser();
                                 currentUser.put("ava", file);
-                                ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-                                progressDialog.show();
                                 currentUser.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        progressDialog.dismiss();
                                         if (e == null) {
                                             Toast.makeText(getApplicationContext(), "Ваша світлина була обновлена", Toast.LENGTH_SHORT).show();
                                             Log.i("Photo Ava Update", "Success photo update for " + currentUser.getUsername());

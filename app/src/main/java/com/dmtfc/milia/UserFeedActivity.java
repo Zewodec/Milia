@@ -32,7 +32,6 @@ import java.util.List;
  */
 public class UserFeedActivity extends AppCompatActivity {
 
-    private ProgressDialog progressDialog;
     private boolean isFollowing;
 
     private TextView haveFollowersCountTextView;
@@ -42,7 +41,6 @@ public class UserFeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_feed);
-        progressDialog = new ProgressDialog(getApplicationContext());
 
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
@@ -72,7 +70,6 @@ public class UserFeedActivity extends AppCompatActivity {
 
         query.whereEqualTo("username", username);
         query.orderByDescending("createdAt");
-        progressDialog.show();
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -87,7 +84,6 @@ public class UserFeedActivity extends AppCompatActivity {
                         file.getDataInBackground(new GetDataCallback() {
                             @Override
                             public void done(byte[] data, ParseException e) {
-                                progressDialog.dismiss();
                                 if (e == null && data != null) {
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
