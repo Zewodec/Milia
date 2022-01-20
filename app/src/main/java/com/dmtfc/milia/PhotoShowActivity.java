@@ -11,6 +11,13 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.parse.GetCallback;
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 public class PhotoShowActivity extends AppCompatActivity {
 
     private ImageView photoShow;
@@ -22,20 +29,36 @@ public class PhotoShowActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        byte[] data = intent.getByteArrayExtra("Image");
-
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        photoShow = findViewById(R.id.PhotoShowImageView);
-
-        photoShow.setImageBitmap(bitmap);
-        fullscreen();
-
-        photoShow.setOnClickListener(new View.OnClickListener() {
+        String objectID = intent.getStringExtra("Image");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
+        query.getInBackground(objectID, new GetCallback<ParseObject>() {
             @Override
-            public void onClick(View view) {
-                fullscreen();
-                finish();
+            public void done(ParseObject object, ParseException e) {
+                if (e == null && object != null) {
+                    ParseFile file = (ParseFile) object.get("image");
+
+                    file.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, ParseException e) {
+                            if (e == null) {
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+                                photoShow = findViewById(R.id.PhotoShowImageView);
+
+                                photoShow.setImageBitmap(bitmap);
+                                fullscreen();
+
+                                photoShow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        fullscreen();
+                                        finish();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -46,7 +69,7 @@ public class PhotoShowActivity extends AppCompatActivity {
         fullscreen();
     }
 
-    private void fullscreen(){
+    private void fullscreen() {
         //FULL SCREEN MODE
         // BEGIN_INCLUDE (get_current_ui_flags)
         // The UI options currently enabled are represented by a bitfield.

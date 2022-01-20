@@ -157,7 +157,7 @@ public class UserListActivity extends AppCompatActivity {
 
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
+                                bitmap.compress(Bitmap.CompressFormat.PNG, Integer.parseInt(getString(R.string.png_quality_upload)), stream);
                                 byte[] byteArray = stream.toByteArray();
                                 ParseFile file = new ParseFile("image.png", byteArray);
                                 ParseObject object = new ParseObject("Image");

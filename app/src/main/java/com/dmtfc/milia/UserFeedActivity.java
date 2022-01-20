@@ -113,7 +113,7 @@ public class UserFeedActivity extends AppCompatActivity {
         userQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null && objects.size() > 0){
+                if (e == null && objects.size() > 0) {
                     ParseUser foundUser = objects.get(0);
                     loadUserProfileImage(foundUser);
                 }
@@ -154,7 +154,7 @@ public class UserFeedActivity extends AppCompatActivity {
         ParseUser.getCurrentUser().remove("isFollowing");
         ParseUser.getCurrentUser().put("isFollowing", tempIsFollowing);
         ParseUser.getCurrentUser().saveInBackground();
-/*
+
         ParseQuery<ParseUser> haveUnFollowerQuery = ParseQuery.getQuery("User");
         haveUnFollowerQuery.whereEqualTo("username", username);
         haveUnFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
@@ -181,7 +181,7 @@ public class UserFeedActivity extends AppCompatActivity {
                     }
                 }
             }
-        });*/
+        });
 
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
     }
@@ -189,33 +189,87 @@ public class UserFeedActivity extends AppCompatActivity {
     private void FollowUser(Button FollowingButton, String username) {
         ParseUser.getCurrentUser().add("isFollowing", username);
         ParseUser.getCurrentUser().saveInBackground();
-/*
-        ParseQuery<ParseUser> haveFollowerQuery = ParseQuery.getQuery("_User");
-        haveFollowerQuery.whereEqualTo("username", username);
-        haveFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
+
+        followerAddToFollowUser(username);
+
+        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+    }
+
+    private void followerAddToFollowUser(String username) {
+
+        ProgressDialog dialog = new ProgressDialog(UserFeedActivity.this);
+
+        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+        userParseQuery.whereEqualTo("username", username);
+        userParseQuery.setLimit(1);
+        ParseUser localUser = null;
+        try {
+            localUser = userParseQuery.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dialog.show();
+        ParseQuery<ParseUser> haveFollowerUserQuery = ParseQuery.getQuery("Followers");
+        haveFollowerUserQuery.whereEqualTo("username", localUser);
+        ParseUser finalLocalUser = localUser;
+        haveFollowerUserQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null && objects.size() > 0) {
-                    ParseUser foundUser = objects.get(0);
-                    if (!foundUser.getList("haveFollowers").contains(ParseUser.getCurrentUser().getUsername())) {
-                        foundUser.add("haveFollowers", ParseUser.getCurrentUser().getUsername());
-                        foundUser.saveInBackground(new SaveCallback() {
+                if (e == null) {
+                    dialog.show();
+                    if (objects == null || objects.size() == 0) {
+                        ParseObject userHaveFollowers = new ParseObject("Followers");
+                        userHaveFollowers.put("username", finalLocalUser);
+                        userHaveFollowers.addUnique("haveFollowers", ParseUser.getCurrentUser().getUsername());
+                        userHaveFollowers.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
+                                dialog.dismiss();
                                 if (e == null) {
-                                    Log.i("Add haveFollowers", "Successful add haveFollower " + ParseUser.getCurrentUser().getUsername() + " to " + username);
+                                    Log.i("Add User in Followers", "Successful add [zero] have Followers");
                                 } else {
-                                    Log.e("Add haveFollowers", "Unsuccessful add haveFollower " + ParseUser.getCurrentUser().getUsername() + " to " + username + "\n" + e.getMessage() + "\n\n");
+                                    Log.e("Add User in Followers", "Unsuccessful add [zero] have Followers: " + e.getMessage());
                                     e.printStackTrace();
                                 }
                             }
                         });
                     }
+                } else if (e != null){
+                    Log.e("Find User in Followers", "Failed Find: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
-        });*/
+        });
 
-        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+
+        ParseQuery<ParseObject> haveFollowerObjectQuery = ParseQuery.getQuery("Followers");
+        haveFollowerObjectQuery.whereEqualTo("username", localUser);
+        haveFollowerObjectQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() > 0) {
+                    dialog.show();
+                    ParseObject userHaveFollowers = objects.get(0);
+                    userHaveFollowers.addUnique("haveFollowers", ParseUser.getCurrentUser().getUsername());
+                    userHaveFollowers.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            dialog.dismiss();
+                            if (e == null) {
+                                Log.i("Add User in Followers", "Successful add have Followers");
+                            } else {
+                                Log.e("Add User in Followers", "Unsuccessful add have Followers: " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else if (e != null) {
+                    Log.e("Find Object in Follower", "Failed Find: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     /**

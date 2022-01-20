@@ -7,4 +7,6 @@
     <string name="back4app_app_id">6i37awctudOyLmmQC7Yotxd3oNrbxXVmwJhIMu4G</string>
     <string name="back4app_client_key">kfIcbgxozU1bieAMKOBXlqp1ThMozevhmgKSa4Fb</string>
 
+    <!--    Quality of uploading photo to server    -->
+    <string name="png_quality_upload">70</string>
 </resources>

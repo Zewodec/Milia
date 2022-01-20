@@ -78,7 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
                                             Intent intent = new Intent(getApplicationContext(), PhotoShowActivity.class);
-                                            intent.putExtra("Image", data);
+                                            intent.putExtra("Image", object.getObjectId());
                                             startActivity(intent);
                                         }
                                     });
