@@ -102,10 +102,11 @@ public class UserFeedActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    SetUserFeedInfo(username);
                 }
             }
         });
+
+        SetUserFeedInfo(username);
 
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
         userQuery.whereEqualTo("username", username);
@@ -205,34 +206,6 @@ public class UserFeedActivity extends AppCompatActivity {
                 }
             }
         });
-
-//        ParseQuery<ParseUser> haveUnFollowerQuery = ParseQuery.getQuery("User");
-//        haveUnFollowerQuery.whereEqualTo("username", username);
-//        haveUnFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
-//            @Override
-//            public void done(List<ParseUser> objects, ParseException e) {
-//                if (e == null && objects.size() > 0) {
-//                    ParseUser foundUser = objects.get(0);
-//                    if (foundUser.getList("haveFollowers").contains(ParseUser.getCurrentUser().getUsername())) {
-//                        foundUser.getList("haveFollowers").remove(ParseUser.getCurrentUser().getUsername());
-//                        List tempHaveUnFollower = foundUser.getList("haveFollowers");
-//                        foundUser.remove("haveFollowers");
-//                        foundUser.put("haveFollowers", tempHaveUnFollower);
-//                        foundUser.saveInBackground(new SaveCallback() {
-//                            @Override
-//                            public void done(ParseException e) {
-//                                if (e == null) {
-//                                    Log.i("Remove haveFollowers", "Successful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username);
-//                                } else {
-//                                    Log.e("Remove haveFollowers", "Unsuccessful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username + "\n" + e.getMessage() + "\n\n");
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        });
     }
 
     private void FollowUser(Button FollowingButton, String username) {
@@ -335,15 +308,34 @@ public class UserFeedActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null && objects.size() > 0) {
-//                    haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     isFollowingCountTextView = findViewById(R.id.isFollowingCountTextView);
-
                     ParseUser foundUser = objects.get(0);
-//                    List haveFollowers = foundUser.getList("haveFollowers");
                     List isFollowing = foundUser.getList("isFollowing");
-
-//                    haveFollowersCountTextView.setText(haveFollowers.size() + "");
                     isFollowingCountTextView.setText(isFollowing.size() + "");
+                }
+            }
+        });
+
+        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+        userParseQuery.whereEqualTo("username", username);
+        userParseQuery.setLimit(1);
+        ParseUser localUser = null;
+        try {
+            localUser = userParseQuery.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseObject> haveFollowersQuery = ParseQuery.getQuery("Followers");
+        haveFollowersQuery.whereEqualTo("username", localUser);
+        haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() > 0){
+                    ParseObject foundUsersFollowers = objects.get(0);
+                    haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
+                    List haveFollowers = foundUsersFollowers.getList("haveFollowers");
+                    haveFollowersCountTextView.setText(haveFollowers.size() + "");
                 }
             }
         });

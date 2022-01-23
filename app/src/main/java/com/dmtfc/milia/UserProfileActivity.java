@@ -1,6 +1,5 @@
 package com.dmtfc.milia;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +51,8 @@ public class UserProfileActivity extends AppCompatActivity {
         query.orderByDescending("createdAt");
 
         GridLayout photoGridLayout = findViewById(R.id.PhotoGridLayout);
+
+        SetUserFeedInfo(username);
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -136,5 +138,54 @@ public class UserProfileActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Set Users info/parameters as Followers, Whom Following and amount of images
+     *
+     * @param username Username of person who opened
+     */
+    private void SetUserFeedInfo(String username) {
+        ParseQuery<ParseUser> usersQuery = ParseUser.getQuery();
+
+        usersQuery.whereEqualTo("username", username);
+
+        usersQuery.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null && objects.size() > 0) {
+                    TextView isFollowingCountTextView = findViewById(R.id.isFollowingCountTextView);
+                    isFollowingCountTextView = findViewById(R.id.isFollowingCountTextView);
+                    ParseUser foundUser = objects.get(0);
+                    List isFollowing = foundUser.getList("isFollowing");
+                    isFollowingCountTextView.setText(isFollowing.size() + "");
+                }
+            }
+        });
+
+        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+        userParseQuery.whereEqualTo("username", username);
+        userParseQuery.setLimit(1);
+        ParseUser localUser = null;
+        try {
+            localUser = userParseQuery.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseObject> haveFollowersQuery = ParseQuery.getQuery("Followers");
+        haveFollowersQuery.whereEqualTo("username", localUser);
+        haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() > 0){
+                    TextView haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
+                    ParseObject foundUsersFollowers = objects.get(0);
+                    haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
+                    List haveFollowers = foundUsersFollowers.getList("haveFollowers");
+                    haveFollowersCountTextView.setText(haveFollowers.size() + "");
+                }
+            }
+        });
     }
 }
