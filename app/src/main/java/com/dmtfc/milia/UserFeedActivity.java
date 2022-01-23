@@ -155,35 +155,84 @@ public class UserFeedActivity extends AppCompatActivity {
         ParseUser.getCurrentUser().put("isFollowing", tempIsFollowing);
         ParseUser.getCurrentUser().saveInBackground();
 
-        ParseQuery<ParseUser> haveUnFollowerQuery = ParseQuery.getQuery("User");
-        haveUnFollowerQuery.whereEqualTo("username", username);
-        haveUnFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
+        followerRemoveFromFollowUser(username);
+
+        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+    }
+
+    private void followerRemoveFromFollowUser(String username) {
+
+        ProgressDialog dialog = new ProgressDialog(UserFeedActivity.this);
+
+        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+        userParseQuery.whereEqualTo("username", username);
+        userParseQuery.setLimit(1);
+        ParseUser localUser = null;
+        try {
+            localUser = userParseQuery.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dialog.show();
+
+        ParseQuery<ParseObject> haveFollowerObjectQuery = ParseQuery.getQuery("Followers");
+        haveFollowerObjectQuery.whereEqualTo("username", localUser);
+        haveFollowerObjectQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseUser> objects, ParseException e) {
+            public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null && objects.size() > 0) {
-                    ParseUser foundUser = objects.get(0);
-                    if (foundUser.getList("haveFollowers").contains(ParseUser.getCurrentUser().getUsername())) {
-                        foundUser.getList("haveFollowers").remove(ParseUser.getCurrentUser().getUsername());
-                        List tempHaveUnFollower = foundUser.getList("haveFollowers");
-                        foundUser.remove("haveFollowers");
-                        foundUser.put("haveFollowers", tempHaveUnFollower);
-                        foundUser.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-                                    Log.i("Remove haveFollowers", "Successful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username);
-                                } else {
-                                    Log.e("Remove haveFollowers", "Unsuccessful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username + "\n" + e.getMessage() + "\n\n");
-                                    e.printStackTrace();
-                                }
+                    dialog.show();
+                    ParseObject userHaveFollowers = objects.get(0);
+                    userHaveFollowers.getList("haveFollowers").remove(username);
+                    List tempHaveFollowers = userHaveFollowers.getList("haveFollowers");
+                    userHaveFollowers.remove("haveFollowers");
+                    userHaveFollowers.put("haveFollowers", tempHaveFollowers);
+                    userHaveFollowers.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            dialog.dismiss();
+                            if (e == null) {
+                                Log.i("Remove Follower", "Successful remove have Followers");
+                            } else {
+                                Log.e("Remove Follower", "Unsuccessful remove have Followers: " + e.getMessage());
+                                e.printStackTrace();
                             }
-                        });
-                    }
+                        }
+                    });
+                } else if (e != null) {
+                    Log.e("Find Object in Follower", "Failed Find: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
 
-        CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
+//        ParseQuery<ParseUser> haveUnFollowerQuery = ParseQuery.getQuery("User");
+//        haveUnFollowerQuery.whereEqualTo("username", username);
+//        haveUnFollowerQuery.findInBackground(new FindCallback<ParseUser>() {
+//            @Override
+//            public void done(List<ParseUser> objects, ParseException e) {
+//                if (e == null && objects.size() > 0) {
+//                    ParseUser foundUser = objects.get(0);
+//                    if (foundUser.getList("haveFollowers").contains(ParseUser.getCurrentUser().getUsername())) {
+//                        foundUser.getList("haveFollowers").remove(ParseUser.getCurrentUser().getUsername());
+//                        List tempHaveUnFollower = foundUser.getList("haveFollowers");
+//                        foundUser.remove("haveFollowers");
+//                        foundUser.put("haveFollowers", tempHaveUnFollower);
+//                        foundUser.saveInBackground(new SaveCallback() {
+//                            @Override
+//                            public void done(ParseException e) {
+//                                if (e == null) {
+//                                    Log.i("Remove haveFollowers", "Successful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username);
+//                                } else {
+//                                    Log.e("Remove haveFollowers", "Unsuccessful remove haveFollower " + ParseUser.getCurrentUser().getUsername() + " from " + username + "\n" + e.getMessage() + "\n\n");
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
     }
 
     private void FollowUser(Button FollowingButton, String username) {
