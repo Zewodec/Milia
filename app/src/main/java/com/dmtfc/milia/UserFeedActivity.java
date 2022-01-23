@@ -1,5 +1,6 @@
 package com.dmtfc.milia;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.parse.FindCallback;
@@ -312,6 +314,17 @@ public class UserFeedActivity extends AppCompatActivity {
                     ParseUser foundUser = objects.get(0);
                     List isFollowing = foundUser.getList("isFollowing");
                     isFollowingCountTextView.setText(isFollowing.size() + "");
+
+                    isFollowingCountTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                            intent.putExtra("Name", "Підписки:");
+                            intent.putExtra("Type Followers", "isFollowing");
+                            intent.putExtra("username", username);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
         });
@@ -336,9 +349,18 @@ public class UserFeedActivity extends AppCompatActivity {
                     haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     List haveFollowers = foundUsersFollowers.getList("haveFollowers");
                     haveFollowersCountTextView.setText(haveFollowers.size() + "");
+                    haveFollowersCountTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), FollowersListActivity.class);
+                            intent.putExtra("Name", "Читачи:");
+                            intent.putExtra("Type Followers", "haveFollowers");
+                            intent.putExtra("username", username);
+                            startActivity(intent);
+                        }
+                    });
                 }
             }
         });
     }
-
 }
