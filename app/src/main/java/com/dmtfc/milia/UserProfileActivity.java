@@ -71,8 +71,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                     imageView.setLayoutParams(new ViewGroup.LayoutParams(
                                             photoGridLayout.getWidth() / 3,
-                                            400));
-                                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                                            photoGridLayout.getWidth() / 3));
+                                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                                     imageView.setImageBitmap(bitmap);
 
@@ -178,7 +178,7 @@ public class UserProfileActivity extends AppCompatActivity {
         haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null && objects.size() > 0){
+                if (e == null && objects.size() > 0) {
                     TextView haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     ParseObject foundUsersFollowers = objects.get(0);
                     haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);

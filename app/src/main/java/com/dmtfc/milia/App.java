@@ -6,6 +6,9 @@ import com.onesignal.OneSignal;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
+
+import org.json.JSONObject;
 
 public class App extends Application {
 
@@ -35,5 +38,8 @@ public class App extends Application {
         // OneSignal Initialization
         OneSignal.initWithContext(this);
         OneSignal.setAppId(ONESIGNAL_APP_ID);
+
+        String userID = ParseUser.getCurrentUser().getObjectId();
+        OneSignal.setExternalUserId(userID);
     }
 }

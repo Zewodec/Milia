@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ProgressDialog authDialogProgress = new ProgressDialog(getApplicationContext());
+        authDialogProgress.setTitle("Авторизовую");
+
         setTitle("MILIA - Авторизація");
 
         Button AuthButton = (Button) findViewById(R.id.authButton);
@@ -36,12 +39,11 @@ public class MainActivity extends AppCompatActivity {
         final EditText editTextLogin = (EditText) findViewById(R.id.editTextLoginRegister);
         final EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
-//        ParseUser.logOut();
-
         //Check if logged
         if (ParseUser.getCurrentUser() != null) {
-            AlreadyUserLoggedGoNext();
-//            if (ParseUser.getCurrentUser().isAuthenticated()) {}
+            if (ParseUser.getCurrentUser().isAuthenticated()) {
+                AlreadyUserLoggedGoNext();
+            }
         }
 
         if (editTextLogin.getText().toString() == "" || editTextPassword.getText().toString() == "") {
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             AuthButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    authDialogProgress.show();
                     //Auth in parse system
                     ParseUser.logInInBackground(
                             editTextLogin.getText().toString(),
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             new LogInCallback() {
                                 @Override
                                 public void done(ParseUser parseUser, ParseException e) {
+                                    authDialogProgress.dismiss();
                                     if (parseUser != null) {
                                         Toast.makeText(getApplicationContext(), "Авторизація успішна!", Toast.LENGTH_SHORT).show();
                                         Log.i("Auth", "Sign In: OK!");
@@ -81,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 ChangeSceneToSignUp();
             }
         });
-
-        // ParseUser.logOut();
 
     /*
     if (ParseUser.getCurrentUser() != null){
@@ -201,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
         registerScene = Scene.getSceneForLayout(sceneRoot, R.layout.activity_sing_up, this);
 
-//        Transition changeTranstion = TransitionInflater.from(this).inflateTransition(R.transition.change_scene);
+//      Transition changeTranstion = TransitionInflater.from(this).inflateTransition(R.transition.change_scene);
         Transition ct = new AutoTransition();
         TransitionManager.go(registerScene, ct);*/
         Intent intent = new Intent(MainActivity.this, SingUpActivity.class);

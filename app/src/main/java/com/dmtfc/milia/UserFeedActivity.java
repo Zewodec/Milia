@@ -1,6 +1,5 @@
 package com.dmtfc.milia;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,11 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import androidx.gridlayout.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.parse.FindCallback;
@@ -49,7 +47,7 @@ public class UserFeedActivity extends AppCompatActivity {
 
         setTitle("@" + username);
 
-        LinearLayout photoLayoutList = (LinearLayout) findViewById(R.id.photoLayoutList);
+        GridLayout photoGridLayout = (GridLayout) findViewById(R.id.FeedGridLayout);
 
         Button FollowingButton = findViewById(R.id.FollowingButton);
 
@@ -92,14 +90,24 @@ public class UserFeedActivity extends AppCompatActivity {
                                     ImageView imageView = new ImageView(getApplicationContext());
 
                                     imageView.setLayoutParams(new ViewGroup.LayoutParams(
-                                            ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                            photoGridLayout.getWidth() / 3,
+                                            photoGridLayout.getWidth() / 3
                                     ));
 
-                                    imageView.setImageBitmap(bitmap);
-                                    imageView.setPadding(0, 0, 0, 20);
+                                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-                                    photoLayoutList.addView(imageView);
+                                    imageView.setImageBitmap(bitmap);
+
+                                    imageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(getApplicationContext(), PhotoShowActivity.class);
+                                            intent.putExtra("Image", object.getObjectId());
+                                            startActivity(intent);
+                                        }
+                                    });
+
+                                    photoGridLayout.addView(imageView);
                                 }
                             }
                         });

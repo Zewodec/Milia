@@ -1,16 +1,12 @@
 package com.dmtfc.milia;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.parse.FindCallback;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -67,12 +63,12 @@ public class FollowersListActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                if (followers.size() > 0) {
-                    ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, followers);
-                    followerList.setAdapter(adapter);
-                }
                 break;
+        }
+
+        if (followers.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, followers);
+            followerList.setAdapter(adapter);
         }
 
     }
