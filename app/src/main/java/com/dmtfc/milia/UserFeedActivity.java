@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import androidx.gridlayout.widget.GridLayout;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,13 +31,16 @@ import java.util.List;
 
 /**
  * The Content of User's photo Activity
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
  */
 public class UserFeedActivity extends AppCompatActivity {
 
-    private boolean isFollowing;
+    private boolean isFollowing;                    // Is current user Following opened user?
 
-    private TextView haveFollowersCountTextView;
-    private TextView isFollowingCountTextView;
+    private TextView haveFollowersCountTextView;    // User's followers TextView
+    private TextView isFollowingCountTextView;      // Amount User's who is followed by current User TextView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +48,11 @@ public class UserFeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_feed);
 
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        String username = intent.getStringExtra("username");    // Getting username from previous activity
 
         setTitle("@" + username);
 
         GridLayout photoGridLayout = (GridLayout) findViewById(R.id.FeedGridLayout);
-
         Button FollowingButton = findViewById(R.id.FollowingButton);
 
         isFollowing = ParseUser.getCurrentUser().getList("isFollowing").contains(username);
@@ -266,7 +270,7 @@ public class UserFeedActivity extends AppCompatActivity {
                             }
                         });
                     }
-                } else if (e != null){
+                } else if (e != null) {
                     Log.e("Find User in Followers", "Failed Find: " + e.getMessage());
                     e.printStackTrace();
                 }
@@ -352,7 +356,7 @@ public class UserFeedActivity extends AppCompatActivity {
         haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null && objects.size() > 0){
+                if (e == null && objects.size() > 0) {
                     ParseObject foundUsersFollowers = objects.get(0);
                     haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     List haveFollowers = foundUsersFollowers.getList("haveFollowers");

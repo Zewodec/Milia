@@ -104,6 +104,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
+    /* Loading User's profile avatar */
     private void loadUserProfileImage() {
         ParseFile file = (ParseFile) ParseUser.getCurrentUser().get("ava");
         if (file != null) {
@@ -133,6 +134,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        /* Open settings */
         if (item.getItemId() == R.id.settingsProfileMenu) {
             Intent intent = new Intent(this, SettingsProfileActivity.class);
             startActivity(intent);
@@ -150,6 +152,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         usersQuery.whereEqualTo("username", username);
 
+        /* Get users who is being followed by founded user */
         usersQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
@@ -163,6 +166,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+        /* Get Object user based on Username */
         ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
         userParseQuery.whereEqualTo("username", username);
         userParseQuery.setLimit(1);
@@ -173,6 +177,7 @@ public class UserProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /* Get user's followers */
         ParseQuery<ParseObject> haveFollowersQuery = ParseQuery.getQuery("Followers");
         haveFollowersQuery.whereEqualTo("username", localUser);
         haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -184,6 +189,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     List haveFollowers = foundUsersFollowers.getList("haveFollowers");
                     haveFollowersCountTextView.setText(haveFollowers.size() + "");
+                }
+            }
+        });
+
+        /* Get amount of images in profile */
+        ParseQuery<ParseObject> amountImages = ParseQuery.getQuery("Image");
+        amountImages.whereEqualTo("username", username);
+        amountImages.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null && objects.size() > 0){
+                    TextView postCountTextView = findViewById(R.id.PostCountTextView);
+                    postCountTextView.setText(objects.size() + "");
                 }
             }
         });

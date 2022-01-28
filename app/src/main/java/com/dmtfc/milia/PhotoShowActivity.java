@@ -18,6 +18,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.json.JSONObject;
+
 public class PhotoShowActivity extends AppCompatActivity {
 
     private ImageView photoShow;
@@ -27,32 +29,44 @@ public class PhotoShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_show);
 
+        GetImage();
+
+        JSONObject comments = new JSONObject();
+
+    }
+
+    /**
+     * Getting Image from objectID that gets from another intent
+     */
+    private void GetImage() {
         Intent intent = getIntent();
 
-        String objectID = intent.getStringExtra("Image");
+        String objectID = intent.getStringExtra("Image");             // Get ObjectID
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
         query.getInBackground(objectID, new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null && object != null) {
-                    ParseFile file = (ParseFile) object.get("image");
+                    ParseFile file = (ParseFile) object.get("image");       // Get File Image from server
 
                     file.getDataInBackground(new GetDataCallback() {
                         @Override
                         public void done(byte[] data, ParseException e) {
                             if (e == null) {
+                                /* Decode image to body */
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
                                 photoShow = findViewById(R.id.PhotoShowImageView);
 
+                                /* Set Image */
                                 photoShow.setImageBitmap(bitmap);
-                                fullscreen();
+                                fullscreen(); // Change fullscreen mode
 
                                 photoShow.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        fullscreen();
-                                        finish();
+                                        fullscreen();   // Change fullscreen mode
+                                        finish();       // Close Activity
                                     }
                                 });
                             }
