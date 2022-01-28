@@ -7,41 +7,92 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PhotoShowActivity extends AppCompatActivity {
 
     private ImageView photoShow;
+    private TextInputEditText commentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_show);
 
-        GetImage();
+        commentView = findViewById(R.id.CommentEditText);
 
-        JSONObject comments = new JSONObject();
+        Intent intent = getIntent();
+        String objectID = intent.getStringExtra("Image");             // Get ObjectID
 
+        GetImage(objectID);
+
+        Button sendComment = findViewById(R.id.SendCommentButton);
+        sendComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddComment(objectID);
+            }
+        });
+
+
+    }
+
+    private void AddComment(String objectID) {
+        ParseQuery<ParseObject> commentsQuery = ParseQuery.getQuery("Image");
+        commentsQuery.getInBackground(objectID, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null){
+                    object.add("WhoComment", ParseUser.getCurrentUser().getUsername());
+                    String userComment = getComment();
+                    object.add("Comment", userComment);
+                    object.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null){
+                                Toast.makeText(PhotoShowActivity.this, "Успішно доданий коментар", Toast.LENGTH_SHORT).show();
+                                commentView.setText("");
+                            } else {
+                                Toast.makeText(PhotoShowActivity.this, "Не успішно доданий коментар", Toast.LENGTH_SHORT).show();
+                                Log.e("Error add comment", "Unsuccessful add comment: " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private String getComment() {
+        String comment = commentView.getText().toString();
+        return comment;
     }
 
     /**
      * Getting Image from objectID that gets from another intent
      */
-    private void GetImage() {
-        Intent intent = getIntent();
-
-        String objectID = intent.getStringExtra("Image");             // Get ObjectID
+    private void GetImage(String objectID) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
         query.getInBackground(objectID, new GetCallback<ParseObject>() {
             @Override
