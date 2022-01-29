@@ -37,7 +37,6 @@ public class PhotoShowActivity extends AppCompatActivity {
 
     private List<String> usernames = new ArrayList<>();
     private List<String> comments = new ArrayList<>();
-    private List<Bitmap> avas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +51,7 @@ public class PhotoShowActivity extends AppCompatActivity {
         GetImage(objectID);
 
         Button sendComment = findViewById(R.id.SendCommentButton);
-        sendComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddComment(objectID);
-            }
-        });
+        sendComment.setOnClickListener(view -> AddComment(objectID));
 
         recyclerView = findViewById(R.id.recyclerCommentView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -65,44 +59,10 @@ public class PhotoShowActivity extends AppCompatActivity {
 
         usernames = getUsernames(objectID);
         comments = getComments(objectID);
-        avas = getAvas(objectID);
 
-        RecyclerLoaderItems recyclerLoaderItems = new RecyclerLoaderItems(usernames,comments,avas,PhotoShowActivity.this);
+        RecyclerLoaderItems recyclerLoaderItems = new RecyclerLoaderItems(usernames,comments,PhotoShowActivity.this);
         recyclerView.setAdapter(recyclerLoaderItems);
     }
-
-    private List<Bitmap> getAvas(String objectID) {
-        List<String> userName = new ArrayList<>();
-        userName = getUsernames(objectID);
-        List<Bitmap> images = new ArrayList<>();
-
-        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
-        for (String user :
-                userName) {
-            userParseQuery.whereEqualTo("username", user);
-        }
-        userParseQuery.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null && objects.size() > 0) {
-                    for (ParseUser user : objects) {
-                        ParseFile file = (ParseFile) user.get("ava");
-                        if (file != null){
-                            file.getDataInBackground(new GetDataCallback() {
-                                @Override
-                                public void done(byte[] data, ParseException e) {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                    images.add(bitmap);
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        });
-        return images;
-    }
-
     private List<String> getComments(String objectID) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
         ParseObject object = null;
@@ -153,8 +113,7 @@ public class PhotoShowActivity extends AppCompatActivity {
     }
 
     private String getComment() {
-        String comment = commentView.getText().toString();
-        return comment;
+        return commentView.getText().toString();
     }
 
     /**
