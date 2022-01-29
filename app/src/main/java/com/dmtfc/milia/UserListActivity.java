@@ -41,6 +41,9 @@ import java.util.List;
 
 /**
  * The list of users Activity
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
  */
 public class UserListActivity extends AppCompatActivity {
 

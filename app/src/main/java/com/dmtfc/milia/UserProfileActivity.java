@@ -84,7 +84,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                     });
-
                                     photoGridLayout.addView(imageView);
                                 }
                             }
@@ -198,7 +197,7 @@ public class UserProfileActivity extends AppCompatActivity {
         amountImages.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null && objects.size() > 0){
+                if (e == null && objects.size() > 0) {
                     TextView postCountTextView = findViewById(R.id.PostCountTextView);
                     postCountTextView.setText(objects.size() + "");
                 }

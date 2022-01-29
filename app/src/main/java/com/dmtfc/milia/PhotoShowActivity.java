@@ -29,14 +29,22 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Show image in fullscreen from profile.
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class PhotoShowActivity extends AppCompatActivity {
 
-    private ImageView photoShow;
-    private TextInputEditText commentView;
-    private RecyclerView recyclerView;
+    private ImageView photoShow;                            // Image for showing in center
+    private TextInputEditText commentView;                  // Comment writing section
+    private RecyclerView recyclerView;                      // Comment section
 
-    private List<String> usernames = new ArrayList<>();
-    private List<String> comments = new ArrayList<>();
+    private List<String> usernames = new ArrayList<>();     // Username list in comments
+    private List<String> comments = new ArrayList<>();      // Their comments
+
+    // TODO: If future make better comment system (may be live?)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +54,33 @@ public class PhotoShowActivity extends AppCompatActivity {
         commentView = findViewById(R.id.CommentEditText);
 
         Intent intent = getIntent();
-        String objectID = intent.getStringExtra("Image");             // Get ObjectID
+        String objectID = intent.getStringExtra("Image");       // Get ObjectID
 
+        /* Loading image in activity */
         GetImage(objectID);
 
+        /* Button which send comment */
         Button sendComment = findViewById(R.id.SendCommentButton);
         sendComment.setOnClickListener(view -> AddComment(objectID));
 
+        /* Setting up comment section */
         recyclerView = findViewById(R.id.recyclerCommentView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        /* Getting all usernames and comments for comments view */
         usernames = getUsernames(objectID);
         comments = getComments(objectID);
 
-        RecyclerLoaderItems recyclerLoaderItems = new RecyclerLoaderItems(usernames,comments,PhotoShowActivity.this);
+        RecyclerLoaderItems recyclerLoaderItems = new RecyclerLoaderItems(usernames, comments, PhotoShowActivity.this);
         recyclerView.setAdapter(recyclerLoaderItems);
     }
+
+    /**
+     * Getting comments text from user.
+     * @param objectID An object ID of open image
+     * @return [String] List of comments text of users.
+     */
     private List<String> getComments(String objectID) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
         ParseObject object = null;
@@ -74,6 +92,11 @@ public class PhotoShowActivity extends AppCompatActivity {
         return object.getList("Comment");
     }
 
+    /**
+     * Gettings usernames from user in comments.
+     * @param objectID Object ID of open image
+     * @return [String] List of usernames names
+     */
     private List<String> getUsernames(String objectID) {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
         ParseObject object = null;
@@ -85,6 +108,10 @@ public class PhotoShowActivity extends AppCompatActivity {
         return object.getList("WhoComment");
     }
 
+    /**
+     * Send user's comment to backend.
+     * @param objectID Object ID of open image
+     */
     private void AddComment(String objectID) {
         ParseQuery<ParseObject> commentsQuery = ParseQuery.getQuery("Image");
         commentsQuery.getInBackground(objectID, new GetCallback<ParseObject>() {
@@ -112,6 +139,11 @@ public class PhotoShowActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get comment from field where current user
+     * do some input.
+     * @return Text from comment filed for current user
+     */
     private String getComment() {
         return commentView.getText().toString();
     }
@@ -161,6 +193,9 @@ public class PhotoShowActivity extends AppCompatActivity {
         fullscreen();
     }
 
+    /**
+     * Open image from profile in fullscreen.
+     */
     private void fullscreen() {
         //FULL SCREEN MODE
         // BEGIN_INCLUDE (get_current_ui_flags)

@@ -30,6 +30,12 @@ import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Some settings for current user
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class SettingsProfileActivity extends AppCompatActivity {
 
     @Override
@@ -41,17 +47,17 @@ public class SettingsProfileActivity extends AppCompatActivity {
 
         Button changeProfileImage = findViewById(R.id.changeProfileImage);
 
-        changeProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeProfileImage();
-            }
-        });
+        /* Change ava image for another */
+        changeProfileImage.setOnClickListener(view -> changeProfileImage());
 
+        /* Load current user's ava */
         loadUserProfileImage();
 
     }
 
+    /**
+     * Load current user's ava.
+     */
     private void loadUserProfileImage() {
         ParseFile file = (ParseFile) ParseUser.getCurrentUser().get("ava");
         if (file != null) {
@@ -68,6 +74,10 @@ public class SettingsProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checking if there permission to get access
+     * to External Storage.
+     */
     private void CheckExternalStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -76,12 +86,18 @@ public class SettingsProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Changing Ava image for current user.
+     */
     private void changeProfileImage() {
         CheckExternalStoragePermission();
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         photoSettingsResultLauncher.launch(intent);
     }
 
+    /**
+     * Difficult process for getting image from user...
+     */
     ActivityResultLauncher<Intent> photoSettingsResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -91,7 +107,7 @@ public class SettingsProfileActivity extends AppCompatActivity {
                         // There are no request codes
                         Intent data = result.getData();
 
-                        //Code GO Brrrr
+                        // Code starts here
                         if (data != null) {
                             Uri selectedImage = data.getData();
                             try {

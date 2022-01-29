@@ -5,13 +5,16 @@ import android.app.Application;
 import com.onesignal.OneSignal;
 import com.parse.Parse;
 import com.parse.ParseACL;
-import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
-import org.json.JSONObject;
-
+/**
+ * Class where setup begins.
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class App extends Application {
 
+    /* ID for registering app in ONESIGNAl for push messages */
     private static final String ONESIGNAL_APP_ID = "6d9bdc89-8c8d-43cb-983c-4b375aa7099a";
 
     @Override
@@ -25,8 +28,6 @@ public class App extends Application {
                 .clientKey(getString(R.string.back4app_client_key))
                 .server(getString(R.string.back4app_server_url))
                 .build());
-
-        //ParseUser.enableAutomaticUser();
 
         ParseACL defaultACL = new ParseACL();
         defaultACL.setPublicReadAccess(true);

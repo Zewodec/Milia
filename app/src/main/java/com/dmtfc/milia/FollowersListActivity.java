@@ -15,6 +15,12 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Show all user's in system.
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class FollowersListActivity extends AppCompatActivity {
 
     @Override
@@ -22,18 +28,23 @@ public class FollowersListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers_list);
 
+        // Component for display this
         ListView followerList = findViewById(R.id.followerList);
 
+        // Get current Intent with some extra parameters
         Intent intent = getIntent();
-        String title = intent.getStringExtra("Name");
-        String type = intent.getStringExtra("Type Followers");
-        String username = intent.getStringExtra("username");
+        String title = intent.getStringExtra("Name");           // Name of layout (Читачи or Підписники)
+        String type = intent.getStringExtra("Type Followers");  // Type of followers (isFoolowing or haveFollowedrs)
+        String username = intent.getStringExtra("username");    // Username of whom user opened activity
 
+        // Set Activity name
         setTitle(title);
 
+        // There will be followers who are following or followed by
         List followers = new ArrayList<>();
 
         switch (type) {
+            // Show users followed by this profile
             case "isFollowing":
                 ParseQuery<ParseUser> isFollowingUsers = ParseUser.getQuery();
                 isFollowingUsers.whereEqualTo("username", username);
@@ -44,7 +55,9 @@ public class FollowersListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
+            // Show users who following this profile
             case "haveFollowers":
+                /* Getting user */
                 ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
                 userParseQuery.whereEqualTo("username", username);
                 userParseQuery.setLimit(1);
@@ -54,7 +67,7 @@ public class FollowersListActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
+                /* Getting followers who following this account */
                 ParseQuery<ParseObject> haveFollowersQuery = ParseQuery.getQuery("Followers");
                 haveFollowersQuery.whereEqualTo("username", localUser);
                 try {
@@ -66,6 +79,7 @@ public class FollowersListActivity extends AppCompatActivity {
                 break;
         }
 
+        // Show users
         if (followers.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, followers);
             followerList.setAdapter(adapter);

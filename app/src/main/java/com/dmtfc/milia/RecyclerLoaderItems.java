@@ -24,16 +24,20 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class which load comments on PhotoShowActivity
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
+ */
 public class RecyclerLoaderItems extends RecyclerView.Adapter<RecyclerLoaderItems.ViewClass> {
     private List<String> username;
     private List<String> comment;
-    //    private List<Bitmap> avaImage;
     private Context context;
 
     public RecyclerLoaderItems(List<String> username, List<String> comment, Context context) {
         this.username = username;
         this.comment = comment;
-//        this.avaImage = new ArrayList<>();
         this.context = context;
     }
 
@@ -44,11 +48,18 @@ public class RecyclerLoaderItems extends RecyclerView.Adapter<RecyclerLoaderItem
         return new ViewClass(view);
     }
 
+    /**
+     * Setting info like username, comments, images in right place
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewClass holder, int position) {
+        /* Sets username and comment */
         holder.username.setText(username.get(position));
         holder.comment.setText(comment.get(position));
 
+        /* Sets ava for them */
         ParseQuery<ParseUser> imageQuery = ParseUser.getQuery();
         imageQuery.whereEqualTo("username", username.get(position));
         try {
@@ -70,14 +81,6 @@ public class RecyclerLoaderItems extends RecyclerView.Adapter<RecyclerLoaderItem
         } catch (ParseException e) {
             e.printStackTrace();
         }
-//        holder.ava.setImageBitmap(avaImage.get(position));
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(context, "Пункт вибраний", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
     }
 
     @Override
