@@ -52,24 +52,30 @@ public class UserFeedActivity extends AppCompatActivity {
 
         setTitle("@" + username);
 
-        GridLayout photoGridLayout = (GridLayout) findViewById(R.id.FeedGridLayout);
-        Button FollowingButton = findViewById(R.id.FollowingButton);
+        GridLayout photoGridLayout = (GridLayout) findViewById(R.id.FeedGridLayout);    // Images showing in grid
+        Button FollowingButton = findViewById(R.id.FollowingButton);                    // Button for follow/unfollow
 
+        // Check if current user is following opened profile
         isFollowing = ParseUser.getCurrentUser().getList("isFollowing").contains(username);
 
+        // Set style for button based of isFollowing
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
 
         FollowingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // If Following:
                 if (isFollowing) {
+                    // true: unfollow
                     UnFollowFromUser(FollowingButton, username);
                 } else {
+                    // false: follow
                     FollowUser(FollowingButton, username);
                 }
             }
         });
 
+        /* Load images to grid view */
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Image");
         query.whereEqualTo("username", username);
         query.orderByDescending("createdAt");
@@ -78,9 +84,11 @@ public class UserFeedActivity extends AppCompatActivity {
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null && objects.size() > 0) {
 
+                    // Get amount of images in profile
                     TextView postCountTextView = findViewById(R.id.PostCountTextView);
                     postCountTextView.setText(objects.size() + "");
 
+                    // Load every image from profile
                     for (ParseObject object : objects) {
                         ParseFile file = (ParseFile) object.get("image");
 
@@ -88,19 +96,24 @@ public class UserFeedActivity extends AppCompatActivity {
                             @Override
                             public void done(byte[] data, ParseException e) {
                                 if (e == null && data != null) {
+                                    // Decode and get full image
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
                                     ImageView imageView = new ImageView(getApplicationContext());
 
+                                    // Set size of this image
                                     imageView.setLayoutParams(new ViewGroup.LayoutParams(
                                             photoGridLayout.getWidth() / 3,
                                             photoGridLayout.getWidth() / 3
                                     ));
 
+                                    // Set how it will look like in this square
                                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
+                                    // Set image to image View
                                     imageView.setImageBitmap(bitmap);
 
+                                    // Add possibility to open image with comments
                                     imageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -119,8 +132,10 @@ public class UserFeedActivity extends AppCompatActivity {
             }
         });
 
+        // Update info like amount of images, followers, readers
         SetUserFeedInfo(username);
 
+        // Load ava for profile
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
         userQuery.whereEqualTo("username", username);
         userQuery.setLimit(1);
@@ -135,6 +150,11 @@ public class UserFeedActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Load Ava for opened profile
+     *
+     * @param user [ParseUser] a user object need to get user's ava
+     */
     private void loadUserProfileImage(ParseUser user) {
         ParseFile file = (ParseFile) user.get("ava");
         if (file != null) {
@@ -143,14 +163,18 @@ public class UserFeedActivity extends AppCompatActivity {
                 public void done(byte[] data, ParseException e) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     ImageView AvaImage = findViewById(R.id.AvaImage);
-
                     AvaImage.setImageBitmap(bitmap);
-
                 }
             });
         }
     }
 
+    /**
+     * Check if current user follows user and set for
+     * button special style if follows or not.
+     * @param FollowingButton The Button on which style will be applied
+     * @param username Check if current user is following specific user
+     */
     private void CheckIsFollowingAndSetButtonStyle(Button FollowingButton, String username) {
         isFollowing = ParseUser.getCurrentUser().getList("isFollowing").contains(username);
         if (isFollowing) {
@@ -162,6 +186,13 @@ public class UserFeedActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method implements a process unfollowing from user.
+     * It delete username of current user as in own followers and
+     * user's readers.
+     * @param FollowingButton For editing style of following button
+     * @param username current user who will be unfollowed
+     */
     private void UnFollowFromUser(Button FollowingButton, String username) {
         ParseUser.getCurrentUser().getList("isFollowing").remove(username);
         List tempIsFollowing = ParseUser.getCurrentUser().getList("isFollowing");
@@ -174,6 +205,11 @@ public class UserFeedActivity extends AppCompatActivity {
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
     }
 
+    /**
+     * Unfollow from user and delete info about current follower
+     * from his profile.
+     * @param username current user who will be unfollowed from subscribed person
+     */
     private void followerRemoveFromFollowUser(String username) {
 
         ProgressDialog dialog = new ProgressDialog(UserFeedActivity.this);
@@ -189,6 +225,7 @@ public class UserFeedActivity extends AppCompatActivity {
         }
         dialog.show();
 
+        /* Unfollowing query in follower profile */
         ParseQuery<ParseObject> haveFollowerObjectQuery = ParseQuery.getQuery("Followers");
         haveFollowerObjectQuery.whereEqualTo("username", localUser);
         haveFollowerObjectQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -221,6 +258,11 @@ public class UserFeedActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Follow some user and change follow button style.
+     * @param FollowingButton Button which changes its style
+     * @param username Add to current user list who will be followed by
+     */
     private void FollowUser(Button FollowingButton, String username) {
         ParseUser.getCurrentUser().add("isFollowing", username);
         ParseUser.getCurrentUser().saveInBackground();
@@ -230,10 +272,15 @@ public class UserFeedActivity extends AppCompatActivity {
         CheckIsFollowingAndSetButtonStyle(FollowingButton, username);
     }
 
+    /**
+     * Add current user to follower list of some user
+     * @param username Some user
+     */
     private void followerAddToFollowUser(String username) {
 
         ProgressDialog dialog = new ProgressDialog(UserFeedActivity.this);
 
+        /* Get user to edit */
         ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
         userParseQuery.whereEqualTo("username", username);
         userParseQuery.setLimit(1);
@@ -244,6 +291,8 @@ public class UserFeedActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         dialog.show();
+
+        /* Add current user to some user's follower list */
         ParseQuery<ParseUser> haveFollowerUserQuery = ParseQuery.getQuery("Followers");
         haveFollowerUserQuery.whereEqualTo("username", localUser);
         ParseUser finalLocalUser = localUser;
@@ -251,7 +300,8 @@ public class UserFeedActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
-                    dialog.show();
+                    /* Add current user to some user's follower list
+                    * if it is empty */
                     if (objects == null || objects.size() == 0) {
                         ParseObject userHaveFollowers = new ParseObject("Followers");
                         userHaveFollowers.put("username", finalLocalUser);
@@ -276,14 +326,14 @@ public class UserFeedActivity extends AppCompatActivity {
             }
         });
 
-
+        /* Add current user to some user's follower list */
         ParseQuery<ParseObject> haveFollowerObjectQuery = ParseQuery.getQuery("Followers");
         haveFollowerObjectQuery.whereEqualTo("username", localUser);
+        dialog.show();
         haveFollowerObjectQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null && objects.size() > 0) {
-                    dialog.show();
                     ParseObject userHaveFollowers = objects.get(0);
                     userHaveFollowers.addUnique("haveFollowers", ParseUser.getCurrentUser().getUsername());
                     userHaveFollowers.saveInBackground(new SaveCallback() {
@@ -317,6 +367,7 @@ public class UserFeedActivity extends AppCompatActivity {
 
         usersQuery.whereEqualTo("username", username);
 
+        /* Update amount of "Following for" someone */
         usersQuery.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
@@ -326,6 +377,7 @@ public class UserFeedActivity extends AppCompatActivity {
                     List isFollowing = foundUser.getList("isFollowing");
                     isFollowingCountTextView.setText(isFollowing.size() + "");
 
+                    /* Possibility to watch "Following for" */
                     isFollowingCountTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -340,6 +392,7 @@ public class UserFeedActivity extends AppCompatActivity {
             }
         });
 
+        /* Getting specific user from opened profile */
         ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
         userParseQuery.whereEqualTo("username", username);
         userParseQuery.setLimit(1);
@@ -350,6 +403,7 @@ public class UserFeedActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /* Update amount of readers */
         ParseQuery<ParseObject> haveFollowersQuery = ParseQuery.getQuery("Followers");
         haveFollowersQuery.whereEqualTo("username", localUser);
         haveFollowersQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -360,6 +414,8 @@ public class UserFeedActivity extends AppCompatActivity {
                     haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     List haveFollowers = foundUsersFollowers.getList("haveFollowers");
                     haveFollowersCountTextView.setText(haveFollowers.size() + "");
+
+                    /* Possibility to view readers */
                     haveFollowersCountTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
