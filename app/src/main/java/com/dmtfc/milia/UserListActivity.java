@@ -41,6 +41,9 @@ import java.util.List;
 
 /**
  * The list of users Activity
+ *
+ * @author Adam Ivaniush
+ * @version 0.1.0
  */
 public class UserListActivity extends AppCompatActivity {
 
@@ -49,6 +52,7 @@ public class UserListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
 
+        /* If user not log in then go log in */
         if (ParseUser.getCurrentUser() == null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -63,6 +67,7 @@ public class UserListActivity extends AppCompatActivity {
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, usernames);
 
+        /* If some user CLICKED than opens its profile */
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -72,11 +77,10 @@ public class UserListActivity extends AppCompatActivity {
             }
         });
 
+        /* Show all users */
         ParseQuery<ParseUser> query = ParseUser.getQuery();
-
         query.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
         query.addAscendingOrder("username");
-
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
@@ -94,6 +98,7 @@ public class UserListActivity extends AppCompatActivity {
         });
     }
 
+    /* Create little menu in top bar */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -104,13 +109,18 @@ public class UserListActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /* Some options in menu */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
+            /* Check permission on external storage
+            * And then open select image dialog
+            * and send on backend */
             case R.id.share:
                 CheckExternalStoragePermission();
                 break;
+            /* Process of logging out */
             case R.id.LogOut: {
                 ParseUser.logOut();
                 Intent intent = new Intent(this, MainActivity.class);
@@ -118,6 +128,7 @@ public class UserListActivity extends AppCompatActivity {
                 finish();
                 break;
             }
+            /* Open current user's profile */
             case R.id.MyProfile: {
                 Intent intent = new Intent(this, UserProfileActivity.class);
                 startActivity(intent);
@@ -128,6 +139,10 @@ public class UserListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Check access to External Storage.
+     * Than Start process of sharing photo ( Method: getPhotoToShare(); )
+     */
     private void CheckExternalStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -186,7 +201,10 @@ public class UserListActivity extends AppCompatActivity {
                 }
             });
 
-
+    /**
+     * Start activity of getting image and than
+     * send it on server.
+     */
     private void getPhotoToShare() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         photoActivityResultLauncher.launch(intent);
