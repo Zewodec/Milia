@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.onesignal.OneSignal;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -29,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ProgressDialog authDialogProgress = new ProgressDialog(getApplicationContext());
-        authDialogProgress.setTitle("Авторизовую");
-
         setTitle("MILIA - Авторизація");
 
         Button AuthButton = (Button) findViewById(R.id.authButton);
@@ -43,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() != null) {
             if (ParseUser.getCurrentUser().isAuthenticated()) {
                 AlreadyUserLoggedGoNext();
+                String userID = ParseUser.getCurrentUser().getObjectId();
+                OneSignal.setExternalUserId(userID);
             }
         }
 
@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             AuthButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    authDialogProgress.show();
                     //Auth in parse system
                     ParseUser.logInInBackground(
                             editTextLogin.getText().toString(),
@@ -62,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
                             new LogInCallback() {
                                 @Override
                                 public void done(ParseUser parseUser, ParseException e) {
-                                    authDialogProgress.dismiss();
                                     if (parseUser != null) {
                                         Toast.makeText(getApplicationContext(), "Авторизація успішна!", Toast.LENGTH_SHORT).show();
                                         Log.i("Auth", "Sign In: OK!");
+                                        String userID = ParseUser.getCurrentUser().getObjectId();
+                                        OneSignal.setExternalUserId(userID);
 
                                         SwitchActivityToUserList();
                                     } else {

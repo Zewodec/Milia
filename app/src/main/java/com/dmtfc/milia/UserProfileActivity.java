@@ -186,7 +186,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (e == null && objects.size() > 0) {
                     TextView haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     ParseObject foundUsersFollowers = objects.get(0);
-                    haveFollowersCountTextView = findViewById(R.id.haveFollowersCountTextView);
                     List haveFollowers = foundUsersFollowers.getList("haveFollowers");
                     haveFollowersCountTextView.setText(haveFollowers.size() + "");
                 }

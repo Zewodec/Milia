@@ -8,15 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -26,13 +26,18 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoShowActivity extends AppCompatActivity {
 
     private ImageView photoShow;
     private TextInputEditText commentView;
+    private RecyclerView recyclerView;
+
+    private List<String> usernames = new ArrayList<>();
+    private List<String> comments = new ArrayList<>();
+    private List<Bitmap> avas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,70 @@ public class PhotoShowActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = findViewById(R.id.recyclerCommentView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
+        usernames = getUsernames(objectID);
+        comments = getComments(objectID);
+        avas = getAvas(objectID);
+
+        RecyclerLoaderItems recyclerLoaderItems = new RecyclerLoaderItems(usernames,comments,avas,PhotoShowActivity.this);
+        recyclerView.setAdapter(recyclerLoaderItems);
+    }
+
+    private List<Bitmap> getAvas(String objectID) {
+        List<String> userName = new ArrayList<>();
+        userName = getUsernames(objectID);
+        List<Bitmap> images = new ArrayList<>();
+
+        ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+        for (String user :
+                userName) {
+            userParseQuery.whereEqualTo("username", user);
+        }
+        userParseQuery.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null && objects.size() > 0) {
+                    for (ParseUser user : objects) {
+                        ParseFile file = (ParseFile) user.get("ava");
+                        if (file != null){
+                            file.getDataInBackground(new GetDataCallback() {
+                                @Override
+                                public void done(byte[] data, ParseException e) {
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    images.add(bitmap);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+        return images;
+    }
+
+    private List<String> getComments(String objectID) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
+        ParseObject object = null;
+        try {
+            object = query.get(objectID);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return object.getList("Comment");
+    }
+
+    private List<String> getUsernames(String objectID) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Image");
+        ParseObject object = null;
+        try {
+            object = query.get(objectID);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return object.getList("WhoComment");
     }
 
     private void AddComment(String objectID) {
@@ -62,14 +130,14 @@ public class PhotoShowActivity extends AppCompatActivity {
         commentsQuery.getInBackground(objectID, new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                if (e == null){
+                if (e == null) {
                     object.add("WhoComment", ParseUser.getCurrentUser().getUsername());
                     String userComment = getComment();
                     object.add("Comment", userComment);
                     object.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if (e == null){
+                            if (e == null) {
                                 Toast.makeText(PhotoShowActivity.this, "Успішно доданий коментар", Toast.LENGTH_SHORT).show();
                                 commentView.setText("");
                             } else {

@@ -38,8 +38,5 @@ public class App extends Application {
         // OneSignal Initialization
         OneSignal.initWithContext(this);
         OneSignal.setAppId(ONESIGNAL_APP_ID);
-
-        String userID = ParseUser.getCurrentUser().getObjectId();
-        OneSignal.setExternalUserId(userID);
     }
 }
