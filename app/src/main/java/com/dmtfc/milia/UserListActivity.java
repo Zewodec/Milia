@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The list of users Activity
+ * The list of all users in system
  *
  * @author Adam Ivaniush
  * @version 0.1.0

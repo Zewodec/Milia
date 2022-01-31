@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Show all user's in system.
+ * Show user's follower or readers.
  *
  * @author Adam Ivaniush
  * @version 0.1.0
