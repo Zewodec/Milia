@@ -28,7 +28,7 @@ import java.util.List;
  * @version 0.1.0
  */
 public class RecyclerLoaderItems extends RecyclerView.Adapter<RecyclerLoaderItems.ViewClass> {
-    private List<String> username;
+    private final List<String> username;
     private List<String> comment;
     private Context context;
 
