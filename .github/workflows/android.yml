@@ -36,7 +36,7 @@ jobs:
         # Should this release be marked as a pre-release?
         prerelease: true
         # Git tag (for automatic releases)
-        automatic_release_tag: "Update ${{ github.run_number }}"
+        automatic_release_tag: "update-${{ github.run_number }}"
         # Release title (for automatic releases)
         title: Milia v.1.1.${{ github.run_number }}
         # Assets to upload to the release
