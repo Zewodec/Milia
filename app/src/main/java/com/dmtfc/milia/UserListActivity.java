@@ -134,6 +134,10 @@ public class UserListActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
+            case R.id.findUser:
+                Intent intent = new Intent(this, LookingForUsersActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
