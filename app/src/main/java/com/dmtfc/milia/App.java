@@ -14,8 +14,8 @@ import com.parse.ParseACL;
  */
 public class App extends Application {
 
-    /* ID for registering app in ONESIGNAl for push messages */
-    private static final String ONESIGNAL_APP_ID = "6d9bdc89-8c8d-43cb-983c-4b375aa7099a";
+    /* ID for registering app in ONESIGNAL for push messages */
+    private static final String ONESIGNAL_APP_ID = String.valueOf(R.string.ONESIGNAL_APP_ID);
 
     @Override
     public void onCreate() {

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/findUser"
-        android:title="Пошук користувачів" />
+        android:title="Пошук користувача" />
     <item
         android:id="@+id/share"
         android:icon="@android:drawable/ic_menu_share"

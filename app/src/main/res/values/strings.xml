@@ -7,6 +7,8 @@
     <string name="back4app_app_id">6i37awctudOyLmmQC7Yotxd3oNrbxXVmwJhIMu4G</string>
     <string name="back4app_client_key">kfIcbgxozU1bieAMKOBXlqp1ThMozevhmgKSa4Fb</string>
 
+    <string name="ONESIGNAL_APP_ID">a6d9bdc89-8c8d-43cb-983c-4b375aa7099</string>
+
     <!--    Quality of uploading photo to server    -->
     <string name="png_quality_upload">70</string>
 </resources>
