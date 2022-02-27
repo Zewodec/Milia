@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">MILIA</string>
 
-    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_server_url">YOUR_PARSE_SERVER_URL</string>
 
     <!-- Paste BOTH strings as required -->
-    <string name="back4app_app_id">6i37awctudOyLmmQC7Yotxd3oNrbxXVmwJhIMu4G</string>
-    <string name="back4app_client_key">kfIcbgxozU1bieAMKOBXlqp1ThMozevhmgKSa4Fb</string>
+    <string name="back4app_app_id">YOUR_PARSE_APP_ID</string>
+    <string name="back4app_client_key">YOUR_PARSE_CLIEND_ID</string>
 
-    <string name="ONESIGNAL_APP_ID">a6d9bdc89-8c8d-43cb-983c-4b375aa7099</string>
+    <string name="ONESIGNAL_APP_ID">YOUR_ONESIGNAL_APP_ID</string>
 
     <!--    Quality of uploading photo to server    -->
     <string name="png_quality_upload">70</string>
