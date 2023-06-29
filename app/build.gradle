@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.dmtfc.milia"
         minSdk 21
-        targetSdk 30
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
